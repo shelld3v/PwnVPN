@@ -33,4 +33,24 @@ Usage:
   - python[3] vpnsh.py -s 745.123.5.88 -e CVE-2019-1579 -c id -p 8081
   
   
+  
+(?) Does VPNShell work with Python2?
+Yes, VPNShell is support both python2 and python3.
+
+(?) Does VPNShell work in Windows?
+VPNShell works with both Windows and Unix, it will give the best
+experience for each OS.
+
+(?) Does VPNShell is the best SSL VPN exploitation tool?
+Yeah, I bringing the best experience for the hackers with the best 
+exploit code that both reduce False Posotive and False Negative and 
+give hackers the best shell interface with the best exploitation analyst. 
+And if there is any issue, I will fix it and even update the code.
+
+(?) How much vulnerabilies does VPNShell support?
+Well, until now just 1: CVE-2019-1579. But, in the future, there will
+be 5 or 7 or even more. I will update it.
+  
+  
+  
  Author: @shelldev (working at HackerOne and BugCrowd
