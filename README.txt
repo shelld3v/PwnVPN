@@ -12,11 +12,11 @@ __      _______  _   _  _____ _          _ _
   
 VPNShell - Exploiting known SSL VPN 0 day vulnerabilities to pwn shell from it. Since may be 2018, 
 Orange Tsai has found many vulnerabilities from over 3 popular SSL VPN services which tottaly impressive.
-After I saw hos blog about that vulnerabilies, I found that SSL VPN (portal) is really dangerous and 
+After I saw his blog about that vulnerabilies, I found that SSL VPN (portal) is really dangerous and 
 exploitable. I found over 2 RCE from bug bounty programs and just feel cool with that. I realized that
 all of that vulnerabilities are new, about 1 or 2 years ago, which mean it's will hard to know and fix it.
 So, I decided to create the best SSL VPN exploit tool for everyone when most of exploits I found are really bad.
-Also, most of them will lead to RCE, so I try to get shell from those 0day bugs. Although there are some bugs
+Also, most of the bugs will lead to RCE, so I try to get shell from those 0day bugs. Although there are some bugs
 (Pulse SSL VPN) require the user interaction, so I may change the name of the tool in the future. But until
 now, VPNShell still just only support 1 vulnerability in Palo Alto SSL VPN, I will update it day-by-day.
 
