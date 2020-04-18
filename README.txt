@@ -53,4 +53,4 @@ be 5 or 7 or even more. I will update it.
   
   
   
- Author: @shelldev (working at HackerOne and BugCrowd
+ Author: @shelldev (working at HackerOne and BugCrowd)
