@@ -38,7 +38,6 @@ banner = '''%s
 parser = argparse.ArgumentParser(description='VPNShell 1.0: Pwn shell from SSL VPN service (portal)')
 parser.add_argument('-s', help='local sorce address (or domain)', dest='host', default='')
 parser.add_argument('-p', help='local port number (default: 443)', dest='port', default='')
-parser.add_argument('-c', help='command to execute after got shell', dest='command', default='')
 parser.add_argument('-n', help='scan the SSL VPN service', dest='scn', action='store_true')
 parser.add_argument('-l', help='list of SSL VPN vulnerabilities', dest='lst', action='store_true')
 parser.add_argument('-e', help='exploit 0day vulnerability', dest='cve', default='')
@@ -46,7 +45,6 @@ parser.add_argument('-e', help='exploit 0day vulnerability', dest='cve', default
 args = parser.parse_args()
 
 
-cmd = format(args.command)
 port = args.port
 try:
     if len(str(port)):
