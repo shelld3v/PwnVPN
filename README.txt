@@ -29,7 +29,7 @@ Usage:
   - python[3] pwnvpn.py -s site.co -n
   - python[3] pwnvpn.py -s vpn.site.co -e CVE-2019-1579
   - python[3] pwnvpn.py -l
-  - python[3] pwnvpn.py -s 745.123.5.88 -e CVE-2019-1579 -c id -p 8081
+  - python[3] pwnvpn.py -s 745.123.5.88 -e CVE-2019-1579 -p 8081
   
   
   
