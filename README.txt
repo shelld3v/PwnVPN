@@ -33,14 +33,14 @@ Usage:
   
   
   
-(?) Does VPNShell work with Python2?
-Yes, VPNShell is support both python2 and python3.
+(?) Does PwnVPN work with Python2?
+Yes, PwnVPN is support both python2 and python3.
 
-(?) Does VPNShell work in Windows?
-VPNShell works with both Windows and Unix, it will give the best
+(?) Does PwnVPN work in Windows?
+PwnVPN works with both Windows and Unix, it will give the best
 experience for each OS.
 
-(?) Does VPNShell is the best SSL VPN exploitation tool?
+(?) Does PwnVPN is the best SSL VPN exploitation tool?
 Yeah, I bringing the best experience for the hackers with the best 
 exploit code that both reduce False Posotive and False Negative and 
 give hackers the best shell interface with the best exploitation analyst. 
